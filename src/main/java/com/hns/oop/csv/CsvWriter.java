@@ -3,11 +3,15 @@ package com.hns.oop.csv;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class CsvWriter {
     
     private BufferedWriter bw;
     private FileWriter fw;
+    private static String csvDir;
     
     public CsvWriter(String fileName, String[] columns) throws IOException{
         bw = null;
@@ -17,7 +21,7 @@ public class CsvWriter {
         }
         
         try {
-            fw = new FileWriter(fileName);
+            fw = new FileWriter(csvDir + fileName);
             bw = new BufferedWriter(fw);
             write(columns); // Column bilgilerini yazdırır.
 	} 
@@ -53,4 +57,17 @@ public class CsvWriter {
 	if (fw != null)
             fw.close();
     } // Yazma işleminin sonuçlanması için BufferedWriter ve FileWriter'ın kapatılması gerekir.
+
+    public static String getCsvDir() {
+        return csvDir;
+    }
+
+    public static void setCsvDir(String csvDir) throws IOException {
+        CsvWriter.csvDir = csvDir;
+        
+        Path path = Paths.get(csvDir);
+        if (!Files.exists(path)) {
+            Files.createDirectories(path);
+        }
+    }
 }

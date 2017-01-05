@@ -44,6 +44,8 @@ public class Helper {
     private String ACM_CSV_FILE;
     private String EXAMS_CSV_FILE;
     private String CRON_EXPRESSION;
+    private String CSV_DIRECTORY;
+    private String ARTICLE_DIRECTORY;
     
     private Email stdMail;
     private Database<Article> database;
@@ -62,6 +64,8 @@ public class Helper {
         ACM_CSV_FILE = "acm.csv";
         EXAMS_CSV_FILE = "exams.csv";
         CRON_EXPRESSION = "0 0 12 1/1 * ? *"; // Once a day at 12.00 am
+        CSV_DIRECTORY = "csv//";
+        ARTICLE_DIRECTORY = "articles//";
         
         database = new ArticleDatabase(DATABASE_HOST, DATABASE_COLLECTION);
         notifier = new EmailNotifier(MAILUSERNAME, MAILPASSWORD);
@@ -81,6 +85,8 @@ public class Helper {
         ACM_CSV_FILE = "acm.csv";
         EXAMS_CSV_FILE = "exams.csv";
         MAILFILE = "UserMailInfo.txt";
+        CSV_DIRECTORY = "csv//";
+        ARTICLE_DIRECTORY = "articles//";
         
         database = new ArticleDatabase(DATABASE_HOST, DATABASE_COLLECTION);
         notifier = new EmailNotifier(MAILUSERNAME, MAILPASSWORD);
@@ -116,6 +122,21 @@ public class Helper {
         } catch (SchedulerException ex) {
             System.out.println(ex.getMessage());
         }
+        
+        try {
+            CsvWriter.setCsvDir(CSV_DIRECTORY);
+        }
+        catch (IOException ex){
+            System.out.println(ex.getMessage());
+        }
+        
+        try {
+            Downloader.getDownloader().setDirectory(ARTICLE_DIRECTORY);
+        }
+        catch (IOException ex){
+            System.out.println(ex.getMessage());
+        }
+        
     } // Program ilkleniyor
     
     public void saveExamsToFile(DefaultTableModel model) throws IOException, SchedulerException{
@@ -166,7 +187,7 @@ public class Helper {
         
         selectedExams.clear(); // Seçili sınavları temizler.
         try {
-            CsvReader cr = new CsvReader(EXAMS_CSV_FILE);
+            CsvReader cr = new CsvReader(CSV_DIRECTORY + EXAMS_CSV_FILE);
             String[] values;
             while((values = cr.readNext())!= null){
                 Exam e = new Exam(values[0], values[1], values[2], values[3], values[4]);
@@ -210,7 +231,7 @@ public class Helper {
     public String populateDatabase() throws IOException, DatabaseException {
         
         CsvReader cr;
-        cr = new CsvReader(ACM_CSV_FILE);
+        cr = new CsvReader(ARTICLE_DIRECTORY + ACM_CSV_FILE);
         
         String[] s;
         Downloader d = Downloader.getDownloader();
@@ -224,7 +245,7 @@ public class Helper {
                 counter++; // Her makale için 1 artar
                 
                 try {
-                    d.download("http://dl.acm.org/citation.cfm?id=" + s[0], s[0] + ".pdf");
+                    d.download("http://dl.acm.org/citation.cfm?id=" + s[0], ARTICLE_DIRECTORY + s[0] + ".pdf");
                     PdfFile pdfFile = new PdfFile(s[0] + ".pdf");
                         
                     Article article = new Article(s[0], s[1], s[2], s[3], s[4], pdfFile.toString());

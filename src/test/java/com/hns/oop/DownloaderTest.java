@@ -10,6 +10,7 @@ public class DownloaderTest {
         Downloader instance = Downloader.getDownloader();
         String link = "http://img-9gag-fun.9cache.com/photo/aG0rdD5_700b.jpg";
         String name = "image.jpg";
+        instance.setDirectory("images//animals//");
         instance.download(link, name);
         System.out.println("Downloaded.");
     }

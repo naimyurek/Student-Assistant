@@ -17,6 +17,7 @@ public class CsvWriterTest {
     public void before() {
         String[] columns = {"ad","tarih"};
         try {
+            CsvWriter.setCsvDir("csv//");
             cw = new CsvWriter("deneme.csv", columns);
         } catch (IOException ex) {
             System.out.println(ex);
@@ -36,7 +37,7 @@ public class CsvWriterTest {
     
     @After
     public void read() throws IOException{
-        CsvReader cr = new CsvReader("deneme.csv");
+        CsvReader cr = new CsvReader("csv/deneme.csv");
         String[] ss;
         cr.readNext();
         while((ss = cr.readNext())!= null){
