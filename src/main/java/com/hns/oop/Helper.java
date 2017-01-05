@@ -231,7 +231,7 @@ public class Helper {
     public String populateDatabase() throws IOException, DatabaseException {
         
         CsvReader cr;
-        cr = new CsvReader(ARTICLE_DIRECTORY + ACM_CSV_FILE);
+        cr = new CsvReader(ACM_CSV_FILE);
         
         String[] s;
         Downloader d = Downloader.getDownloader();
@@ -245,7 +245,7 @@ public class Helper {
                 counter++; // Her makale için 1 artar
                 
                 try {
-                    d.download("http://dl.acm.org/citation.cfm?id=" + s[0], ARTICLE_DIRECTORY + s[0] + ".pdf");
+                    d.download("http://dl.acm.org/ft_gateway.cfm?id=" + s[0], ARTICLE_DIRECTORY + s[0] + ".pdf");
                     PdfFile pdfFile = new PdfFile(s[0] + ".pdf");
                         
                     Article article = new Article(s[0], s[1], s[2], s[3], s[4], pdfFile.toString());
@@ -259,7 +259,7 @@ public class Helper {
             }
         }
         if (!errorMessage.equals(""))
-            return errorMessage;
+            throw new IOException(errorMessage);
         return counter + " article(s) populated into database.";
     } // Veri tabanını internet sitesinden makale id'si ile makale çekerek doldurur.
     

@@ -9,7 +9,6 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import java.util.ArrayList;
-import java.util.function.Consumer;
 import org.bson.Document;
 
 public class ArticleDatabase implements Database{
