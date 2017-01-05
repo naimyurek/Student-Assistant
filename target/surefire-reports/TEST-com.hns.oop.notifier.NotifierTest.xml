@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.os.patch.level" value=""/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="user.dir" value="C:\Users\Harun\Desktop\StudentAssistant"/>
+    <property name="user.dir" value="C:\Users\Harun\Documents\NetBeansProjects\Student-Assistant"/>
     <property name="java.runtime.version" value="1.8.0_111-b14"/>
     <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
     <property name="java.endorsed.dirs" value="C:\Program Files\Java\jdk1.8.0_111\jre\lib\endorsed"/>
@@ -61,5 +61,5 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="com.hns.oop.notifier.NotifierTest" name="testNotifyUser" time="2.017"/>
+  <testcase classname="com.hns.oop.notifier.NotifierTest" name="testNotifyUser" time="2.016"/>
 </testsuite>

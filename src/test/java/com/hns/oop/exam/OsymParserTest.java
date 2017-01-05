@@ -4,7 +4,7 @@ import com.hns.oop.exceptions.ParserException;
 import java.util.ArrayList;
 import org.junit.Test;
 
-public class ÖsymParserTest {
+public class OsymParserTest {
     
     @Test
     public void testGetList() {
