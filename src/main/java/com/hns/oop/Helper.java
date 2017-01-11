@@ -23,6 +23,8 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,6 +48,8 @@ public class Helper {
     private String CRON_EXPRESSION;
     private String CSV_DIRECTORY;
     private String ARTICLE_DIRECTORY;
+    private String PROXYUSER;
+    private String PROXYPASS;
     
     private Email stdMail;
     private Database<Article> database;
@@ -66,6 +70,8 @@ public class Helper {
         CRON_EXPRESSION = "0 0 12 1/1 * ? *"; // Once a day at 12.00 am
         CSV_DIRECTORY = "csv//";
         ARTICLE_DIRECTORY = "articles//";
+        PROXYUSER = "05140000633";
+        PROXYPASS = "34381465172";
         
         database = new ArticleDatabase(DATABASE_HOST, DATABASE_COLLECTION);
         notifier = new EmailNotifier(MAILUSERNAME, MAILPASSWORD);
@@ -136,6 +142,21 @@ public class Helper {
         catch (IOException ex){
             System.out.println(ex.getMessage());
         }
+        
+        Authenticator.setDefault(
+           new Authenticator() {
+              @Override
+              public PasswordAuthentication getPasswordAuthentication() {
+                 return new PasswordAuthentication(
+                       PROXYUSER, PROXYPASS.toCharArray());
+              }
+           }
+        );
+        
+        System.setProperty("http.proxyHost", "155.223.64.100");
+        System.setProperty("http.proxyPort", "8080");
+        System.setProperty("http.proxyUser", PROXYUSER);
+        System.setProperty("http.proxyPassword", PROXYPASS);
         
     } // Program ilkleniyor
     
@@ -245,12 +266,16 @@ public class Helper {
                 counter++; // Her makale için 1 artar
                 
                 try {
+                    System.out.println(s[0] + " indiriliyor.");
                     d.download("http://dl.acm.org/ft_gateway.cfm?id=" + s[0], ARTICLE_DIRECTORY + s[0] + ".pdf");
-                    PdfFile pdfFile = new PdfFile(s[0] + ".pdf");
+                    System.out.println(s[0] + " indirildi.");
+                    
+                    PdfFile pdfFile = new PdfFile(ARTICLE_DIRECTORY + s[0] + ".pdf");
                         
                     Article article = new Article(s[0], s[1], s[2], s[3], s[4], pdfFile.toString());
                     
                     database.insert(article);
+                    System.out.println(s[0] + " veri tabanına eklendi.");
                 }
                 catch (IOException | DatabaseException ex){
                     counterFailed++; // Veri tabanına makaleyi eklerken hata olursa 1 artar.
