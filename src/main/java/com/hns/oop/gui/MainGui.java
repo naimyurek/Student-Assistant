@@ -5,8 +5,6 @@ import com.hns.oop.exceptions.DatabaseException;
 import com.hns.oop.exceptions.ParserException;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.quartz.SchedulerException;
@@ -120,19 +118,18 @@ public class MainGui extends javax.swing.JFrame{
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 573, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jTextFieldSearch)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addComponent(jTextFieldSearch)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jRadioButton1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jRadioButton2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jRadioButton3)
-                                .addGap(287, 287, 287)))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButtonPopulateDatabase, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(searchButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
@@ -291,31 +288,6 @@ public class MainGui extends javax.swing.JFrame{
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
-
-        searchButton.setEnabled(false);
-        
-        String query = "";
-        
-        if(jRadioButton1.isSelected()){
-            query = "title=/"+jTextFieldSearch.getText()+"/";
-        }
-        else if(jRadioButton2.isSelected()){
-            query = "year="+jTextFieldSearch.getText();
-        }
-        else if(jRadioButton3.isSelected()){
-            query = "keywords=/"+jTextFieldSearch.getText()+"/";
-        }
-        
-        try {
-            Helper.getDefaultHelper().searchArticles((DefaultTableModel) jTableResult.getModel(), query);
-        } catch (DatabaseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
-        
-        searchButton.setEnabled(true);
-    }//GEN-LAST:event_searchButtonActionPerformed
-
     private void jButtonLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadActionPerformed
         
         try {
@@ -331,14 +303,6 @@ public class MainGui extends javax.swing.JFrame{
         
         jButtonKaydet.setEnabled(true);
     }//GEN-LAST:event_jButtonLoadActionPerformed
-
-    private void jTableResultMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableResultMouseClicked
-        if (evt.getClickCount()>=2){
-            int index = jTableResult.getSelectedRow();
-            
-            new ArticleReaderGui(Helper.getDefaultHelper().getArticleFromFoundArticles(index)).setVisible(true);
-        }
-    }//GEN-LAST:event_jTableResultMouseClicked
 
     private void jButtonKaydetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonKaydetActionPerformed
         try {
@@ -365,6 +329,39 @@ public class MainGui extends javax.swing.JFrame{
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
     }//GEN-LAST:event_jButtonPopulateDatabaseActionPerformed
+
+    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+
+        searchButton.setEnabled(false);
+
+        String query = "";
+
+        if(jRadioButton1.isSelected()){
+            query = "title=/"+jTextFieldSearch.getText()+"/";
+        }
+        else if(jRadioButton2.isSelected()){
+            query = "year="+jTextFieldSearch.getText();
+        }
+        else if(jRadioButton3.isSelected()){
+            query = "keywords=/"+jTextFieldSearch.getText()+"/";
+        }
+
+        try {
+            Helper.getDefaultHelper().searchArticles((DefaultTableModel) jTableResult.getModel(), query);
+        } catch (DatabaseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+
+        searchButton.setEnabled(true);
+    }//GEN-LAST:event_searchButtonActionPerformed
+
+    private void jTableResultMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableResultMouseClicked
+        if (evt.getClickCount()>=2){
+            int index = jTableResult.getSelectedRow();
+
+            new ArticleReaderGui(Helper.getDefaultHelper().getArticleFromFoundArticles(index)).setVisible(true);
+        }
+    }//GEN-LAST:event_jTableResultMouseClicked
      
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;

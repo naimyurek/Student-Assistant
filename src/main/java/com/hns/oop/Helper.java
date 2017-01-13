@@ -12,6 +12,7 @@ import com.hns.oop.exam.Exam;
 import com.hns.oop.exam.ÖsymParser;
 import com.hns.oop.exceptions.DatabaseException;
 import com.hns.oop.exceptions.ParserException;
+import com.hns.oop.gui.MainGui;
 import com.hns.oop.notifier.Email;
 import com.hns.oop.notifier.EmailNotifier;
 import com.hns.oop.notifier.Notifier;
@@ -30,7 +31,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import org.quartz.SchedulerException;
 
@@ -267,7 +272,7 @@ public class Helper {
                 
                 try {
                     System.out.println(s[0] + " indiriliyor.");
-                    d.download("http://dl.acm.org/ft_gateway.cfm?id=" + s[0], ARTICLE_DIRECTORY + s[0] + ".pdf");
+                    d.download("http://dl.acm.org/ft_gateway.cfm?id=" + s[0], s[0] + ".pdf");
                     System.out.println(s[0] + " indirildi.");
                     
                     PdfFile pdfFile = new PdfFile(ARTICLE_DIRECTORY + s[0] + ".pdf");
@@ -280,6 +285,7 @@ public class Helper {
                 catch (IOException | DatabaseException ex){
                     counterFailed++; // Veri tabanına makaleyi eklerken hata olursa 1 artar.
                     errorMessage += counterFailed + ". Article: " + ex.getMessage() + "\n";
+                    System.out.println(ex.getMessage());
                 }
             }
         }

@@ -5,11 +5,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
@@ -37,7 +35,7 @@ public class Downloader {
         InputStream inputStream;
         FileOutputStream fileOutputStream;
         inputStream = new ByteArrayInputStream(document.bodyAsBytes());
-        fileOutputStream = new FileOutputStream(new File(fileName));
+        fileOutputStream = new FileOutputStream(new File(getDirectory() + fileName));
 
         int length;
         byte[] buffer = new byte[1024];
