@@ -289,28 +289,39 @@ public class MainGui extends javax.swing.JFrame{
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoadActionPerformed
-        
-        try {
-            Helper.getDefaultHelper().getExamsFromÖSYM((DefaultTableModel) jTableExam.getModel());
-            jLabelFailed.setVisible(false);
-        } catch (ParserException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-            jLabelFailed.setVisible(true);
-        } catch (SchedulerException ex){
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-            jLabelFailed.setVisible(false);
-        }
-        
-        jButtonKaydet.setEnabled(true);
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Helper.getDefaultHelper().getExamsFromÖSYM((DefaultTableModel) jTableExam.getModel());
+                    jLabelFailed.setVisible(false);
+                } catch (ParserException ex) {
+                    JOptionPane.showMessageDialog(MainGui.this, ex.getMessage());
+                    jLabelFailed.setVisible(true);
+                } catch (SchedulerException ex){
+                    JOptionPane.showMessageDialog(MainGui.this, ex.getMessage());
+                    jLabelFailed.setVisible(false);
+                }
+
+                jButtonKaydet.setEnabled(true);
+            }
+        }, "ÖSYM");
+        t.start();
     }//GEN-LAST:event_jButtonLoadActionPerformed
 
     private void jButtonKaydetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonKaydetActionPerformed
-        try {
-            Helper.getDefaultHelper().saveExamsToFile((DefaultTableModel) jTableExam.getModel());
-            JOptionPane.showMessageDialog(this, "Saved. You will be notified when the exam date is close.");
-        } catch (IOException | SchedulerException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Helper.getDefaultHelper().saveExamsToFile((DefaultTableModel) jTableExam.getModel());
+                    JOptionPane.showMessageDialog(MainGui.this, "Saved. You will be notified when the exam date is close.");
+                } catch (IOException | SchedulerException ex) {
+                    JOptionPane.showMessageDialog(MainGui.this, ex.getMessage());
+                }
+            }
+        }, "Kaydet");
+        t.start();
     }//GEN-LAST:event_jButtonKaydetActionPerformed
 
     private void jMenuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExitActionPerformed
@@ -322,45 +333,66 @@ public class MainGui extends javax.swing.JFrame{
     }//GEN-LAST:event_jMenuItemSetEmailActionPerformed
 
     private void jButtonPopulateDatabaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPopulateDatabaseActionPerformed
-        try {
-            String result = Helper.getDefaultHelper().populateDatabase();
-            JOptionPane.showMessageDialog(this, result);
-        } catch (DatabaseException | IOException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String result = Helper.getDefaultHelper().populateDatabase();
+                    JOptionPane.showMessageDialog(MainGui.this, result);
+                } catch (DatabaseException | IOException ex) {
+                    JOptionPane.showMessageDialog(MainGui.this, ex.getMessage());
+                }
+            }
+        }, "PopulateDatabase");
+        t.start();
     }//GEN-LAST:event_jButtonPopulateDatabaseActionPerformed
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
 
         searchButton.setEnabled(false);
 
-        String query = "";
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String query = "";
 
-        if(jRadioButton1.isSelected()){
-            query = "title=/"+jTextFieldSearch.getText()+"/";
-        }
-        else if(jRadioButton2.isSelected()){
-            query = "year="+jTextFieldSearch.getText();
-        }
-        else if(jRadioButton3.isSelected()){
-            query = "keywords=/"+jTextFieldSearch.getText()+"/";
-        }
+                if(jRadioButton1.isSelected()){
+                    query = "title=/"+jTextFieldSearch.getText()+"/";
+                }
+                else if(jRadioButton2.isSelected()){
+                    query = "year="+jTextFieldSearch.getText();
+                }
+                else if(jRadioButton3.isSelected()){
+                    query = "keywords=/"+jTextFieldSearch.getText()+"/";
+                }
 
-        try {
-            Helper.getDefaultHelper().searchArticles((DefaultTableModel) jTableResult.getModel(), query);
-        } catch (DatabaseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
-
-        searchButton.setEnabled(true);
+                try {
+                    Helper.getDefaultHelper().searchArticles((DefaultTableModel) jTableResult.getModel(), query);
+                } catch (DatabaseException ex) {
+                    JOptionPane.showMessageDialog(MainGui.this, ex.getMessage());
+                }
+                
+                searchButton.setEnabled(true);
+            }
+        }, "Search");
+        
+        t.start();
+        
     }//GEN-LAST:event_searchButtonActionPerformed
 
     private void jTableResultMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableResultMouseClicked
         if (evt.getClickCount()>=2){
-            int index = jTableResult.getSelectedRow();
-
-            new ArticleReaderGui(Helper.getDefaultHelper().getArticleFromFoundArticles(index)).setVisible(true);
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    int index = jTableResult.getSelectedRow();
+                    new ArticleReaderGui(Helper.getDefaultHelper().getArticleFromFoundArticles(index)).setVisible(true);
+                }
+            }, "ReadArticle");
+            t.start();
         }
+        
+        
     }//GEN-LAST:event_jTableResultMouseClicked
      
     // Variables declaration - do not modify//GEN-BEGIN:variables

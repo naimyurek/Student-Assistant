@@ -12,20 +12,28 @@ public class ArticleReaderGui extends javax.swing.JFrame {
     Article article;
     ArrayList<Article> similars;
     
-    
     public ArticleReaderGui(Article article) {
         initComponents();
         this.article = article;
         similars = new ArrayList<>();
         jTextAreaArticle.setText(article.getContent());
-        try {
-            similars = Helper.getDefaultHelper().setSimilars(article, (DefaultTableModel) jTableResult.getModel(), 4);
-        } catch (DatabaseException ex) {
-            System.out.println(ex);
-        }
+        
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    similars = Helper.getDefaultHelper().setSimilars(article, (DefaultTableModel) jTableResult.getModel(), 4);
+                } catch (DatabaseException ex) {
+                    System.out.println(ex);
+                }
+            }
+        }, "GetSimilars");
+        
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle(article.getTitle() + " - " + article.getAuthor());
         jTextAreaArticle.setCaretPosition(0);
+        
+        t.start();
     }
 
     @SuppressWarnings("unchecked")
