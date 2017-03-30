@@ -21,10 +21,15 @@ public class PdfFile {
         parser.parse(); // İçeriğini parse ediyor.
         PDDocument pdDoc = parser.getPDDocument(); // 
         pdfStripper.setStartPage(1); // İlk sayfadan başla
-        pdfStripper.setEndPage(pdDoc.getNumberOfPages()); // Son sayfaya kadar git
-        
+        try {
+            pdfStripper.setEndPage(pdDoc.getNumberOfPages()); // Son sayfaya kadar git
+        } 
+        catch (Exception ex) { 
+            pdDoc.close();
+            throw new IOException(ex.getMessage()); 
+        }
         Text = pdfStripper.getText(pdDoc); // İçeriğini Text'e kaydet.
-        
+        pdDoc.close();
     }
     
     @Override

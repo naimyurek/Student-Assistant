@@ -1,13 +1,15 @@
 package com.hns.oop;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
 
 public class Downloader {
     
@@ -24,12 +26,25 @@ public class Downloader {
         return downloader;
     }
     
-    public void download(String link, String name) throws IOException{ // Bir linki "name" olarak program dizinine indirir.
+    public void download(String link, String fileName) throws IOException{ // Bir linki "name" olarak program dizinine indirir.
         
-        URL url = new URL(link);
-        InputStream in = url.openStream();
-        File targetFile = new File(getDirectory() + name);
-        Files.copy(in, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        String browser = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36";
+
+        Connection.Response document = Jsoup.connect(link).userAgent(browser).ignoreContentType(true).execute();
+        
+        InputStream inputStream;
+        FileOutputStream fileOutputStream;
+        inputStream = new ByteArrayInputStream(document.bodyAsBytes());
+        fileOutputStream = new FileOutputStream(new File(getDirectory() + fileName));
+
+        int length;
+        byte[] buffer = new byte[1024];
+
+        while ((length = inputStream.read(buffer)) > -1) {
+            fileOutputStream.write(buffer, 0, length);
+        }
+        fileOutputStream.close();
+        inputStream.close();
     }
 
     public String getDirectory() {

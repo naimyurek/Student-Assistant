@@ -11,7 +11,7 @@ public class OsymParserTest {
         System.out.println("getList");
         try {
             ArrayList<Exam> result = ÖsymParser.getParser().getList();
-            result.forEach(System.out::println);
+            //result.forEach(System.out::println);
         } catch (ParserException ex) {
             System.out.println(ex);
         }

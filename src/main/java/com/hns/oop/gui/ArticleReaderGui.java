@@ -12,20 +12,28 @@ public class ArticleReaderGui extends javax.swing.JFrame {
     Article article;
     ArrayList<Article> similars;
     
-    
     public ArticleReaderGui(Article article) {
         initComponents();
         this.article = article;
         similars = new ArrayList<>();
         jTextAreaArticle.setText(article.getContent());
-        try {
-            similars = Helper.getDefaultHelper().setSimilars(article, (DefaultTableModel) jTableResult.getModel(), 4);
-        } catch (DatabaseException ex) {
-            System.out.println(ex);
-        }
+        
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    similars = Helper.getDefaultHelper().setSimilars(article, (DefaultTableModel) jTableResult.getModel(), 4);
+                } catch (DatabaseException ex) {
+                    System.out.println(ex);
+                }
+            }
+        }, "GetSimilars");
+        
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle(article.getTitle() + " - " + article.getAuthor());
         jTextAreaArticle.setCaretPosition(0);
+        
+        t.start();
     }
 
     @SuppressWarnings("unchecked")
@@ -100,11 +108,11 @@ public class ArticleReaderGui extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabelSimilars)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
